@@ -1,25 +1,25 @@
 # You Don't Know JS: Scope & Closures
-# Chapter 1: What is Scope?
+# Bölüm 1: Scope nedir?
 
-One of the most fundamental paradigms of nearly all programming languages is the ability to store values in variables, and later retrieve or modify those values. In fact, the ability to store values and pull values out of variables is what gives a program *state*.
+Hemen hemen her programlama dilinin en temel bileşenlerinden biri, değişkenlerin içerisinde değerleri saklayabilme, daha sonra ulaşabilme ve değiştirebilme yeteneğidir. Aslında, değişkenlerin değerlerini saklamak ve değişkenlerden bu değerleri alabilmek, bir programa asıl özelliğini veren şeydir diyebiliriz.
 
-Without such a concept, a program could perform some tasks, but they would be extremely limited and not terribly interesting.
+Böyle bir kavram olmasaydı, programlar ancak çok kısıtlı ve çokta ilginç olmayan işlevler yerine getirebileceklerdi. 
 
-But the inclusion of variables into our program begets the most interesting questions we will now address: where do those variables *live*? In other words, where are they stored? And, most importantly, how does our program find them when it needs them?
+Değişkenlerin programların içerisine dahil olmaları şu soruları akla getiriyor: Bu değişkenler nerede *yaşıyorlar*? Diğer bir değişle nerede saklanıyorlar, tutuluyorlar? Ve en önemlisi program bu değişkenlere ihtiyaç duyduğu zaman onları nasıl buluyor?
 
-These questions speak to the need for a well-defined set of rules for storing variables in some location, and for finding those variables at a later time. We'll call that set of rules: *Scope*.
+Bu durumda, değişkenleri bir yerlerde saklamak ve bu değişkenlere daha sonra ulaşabilmek için bir takım iyi tanımlanmış kurallar zincirinin gerekliliği akla geliyor. İşte bu kurallar dizisine *Scope* adını veriyoruz.
 
-But, where and how do these *Scope* rules get set?
+Peki, bu *Scope* kuralları nerede ve nasıl tanımlanıyor ve kullanılıyor?
 
-## Compiler Theory
+## Derleyici (Compiler) Teorisi
 
-It may be self-evident, or it may be surprising, depending on your level of interaction with various languages, but despite the fact that JavaScript falls under the general category of "dynamic" or "interpreted" languages, it is in fact a compiled language. It is *not* compiled well in advance, as are many traditionally-compiled languages, nor are the results of compilation portable among various distributed systems.
+Kimine göre normal, kimine göre de şaşırtıcı gelebilir ama JavaScript genellikle "dinamik" yada "yorumlanan (interpreted)" diller kategorisine girsede alında "derlenen (compiled)" bir dildir. Aslında tam olarak diğer geleneksel derlenen diller gibi derlenmiş değildir ve dağıtık sistemler arasında taşınabilir değildir.
 
-But, nevertheless, the JavaScript engine performs many of the same steps, albeit in more sophisticated ways than we may commonly be aware, of any traditional language-compiler.
+Ama yine de, JavaScript motoru, geleneksel derleyicilerin yaptığı işlemlerin çoğunu yerine getirir (ve aslında farkında olduğumuzdan daha sofistike yöntemler kullanarak).
 
-In traditional compiled-language process, a chunk of source code, your program, will undergo typically three steps *before* it is executed, roughly called "compilation":
+Geleneksel derlenen dillerde, yazılan kod, yani program, çalıştırılmadan önce genel olarak "derleme (compilation)" diyeceğimiz üç temel adımdan geçer:
 
-1. **Tokenizing/Lexing:** breaking up a string of characters into meaningful (to the language) chunks, called tokens. For instance, consider the program: `var a = 2;`. This program would likely be broken up into the following tokens: `var`, `a`, `=`, `2`, and `;`. Whitespace may or may not be persisted as a token, depending on whether it's meaningful or not.
+1. **Tokenizing/Lexing:** Karakter dizilerini, programlama diline göre anlamlı, token denen parçalara ayırma işlemine denir. Mesela, programın `var a = 2` karakter dizisinden oluştuğunu varsayalım. Bu program şu şekilde tokenlara ayrılacaktır: `var`, `a`, `=`, `2`, ve `;`. Boşluk karakterleri dilin yapısına göre anlamlandırılıp token olarak kullanılacak veya anlamsız görülüp kullanılmayacaktır.
 
     **Note:** The difference between tokenizing and lexing is subtle and academic, but it centers on whether or not these tokens are identified in a *stateless* or *stateful* way. Put simply, if the tokenizer were to invoke stateful parsing rules to figure out whether `a` should be considered a distinct token or just part of another token, *that* would be **lexing**.
 
