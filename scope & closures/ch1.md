@@ -33,15 +33,15 @@ Geleneksel derlenen dillerde, yazılan kod, yani program, çalıştırılmadan �
 
     **Not:** JavaScript motorunun sistem kaynaklarını nasıl yönettiği konumuzun sınırlarını aşıyor. Bu yüzden sadece JavaScript motorunun ihtiyaç halinde bellekte yer açıp bir değişken oluşturabileceğini ve saklayabileceğini bilmemiz yeterlidir.
 
-The JavaScript engine is vastly more complex than *just* those three steps, as are most other language compilers. For instance, in the process of parsing and code-generation, there are certainly steps to optimize the performance of the execution, including collapsing redundant elements, etc.
+JavaScript motoru da diğer programlama dilleri gibi bu üç adımdan daha karmaşık işler yürütür. Örneğin, parçalama (parsing) ve kod oluşturma (code-generation) aşamalarında, gereksiz elamanların ayıklanması, vb. gibi programın çalışma performansını artırıcı bir dizi işlemler uygulanır.
 
-So, I'm painting only with broad strokes here. But I think you'll see shortly why *these* details we *do* cover, even at a high level, are relevant.
+Burada genelde önemli noktaları vurgulamaya çalışıyorum. Ancak bazı durumlarda detaylara girmemizin nedenini ilerleyen aşamalarda anlayacaksınız.
 
-For one thing, JavaScript engines don't get the luxury (like other language compilers) of having plenty of time to optimize, because JavaScript compilation doesn't happen in a build step ahead of time, as with other languages.
+JavaScript motorunun diğer dillerin derleyicileri gibi derlenecek kodu optimize etmek için bolca zaman harcama lüksü yoktur. Çünkü JavaScript derlemesi diğer dillerde olduğu gibi önceden bir build aşamasında yapılmaz.
 
-For JavaScript, the compilation that occurs happens, in many cases, mere microseconds (or less!) before the code is executed. To ensure the fastest performance, JS engines use all kinds of tricks (like JITs, which lazy compile and even hot re-compile, etc.) which are well beyond the "scope" of our discussion here.
+JavaScript derleme işlemi çoğu durumda kod çalışmadan bir kaç mikro saniye (belki daha az!) öncesinde yapılır. En iyi performansı sağlayabilmek için JavaScript motoru, burada bahsettiklerimizde dahil birçok yöntemi (JIT, lazy compile, re-compile, vb. gibi) kullanır.
 
-Let's just say, for simplicity's sake, that any snippet of JavaScript has to be compiled before (usually *right* before!) it's executed. So, the JS compiler will take the program `var a = 2;` and compile it *first*, and then be ready to execute it, usually right away.
+Basitçe yinelemek gerekirse, JavaScript'te her kod parçası çalışmadan önce (genelllikle hemen önce) derlenmesi gerekir. Yani JavaScript derleyici `var a = 2;` kodunu alır, ilk önce derleme işlemini yapar ve hemen sonrasında da kodu çalıştırır.
 
 ## Understanding Scope
 
