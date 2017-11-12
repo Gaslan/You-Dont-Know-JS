@@ -23,15 +23,15 @@ Geleneksel derlenen dillerde, yazılan kod, yani program, çalıştırılmadan �
 
     **Note:** The difference between tokenizing and lexing is subtle and academic, but it centers on whether or not these tokens are identified in a *stateless* or *stateful* way. Put simply, if the tokenizer were to invoke stateful parsing rules to figure out whether `a` should be considered a distinct token or just part of another token, *that* would be **lexing**.
 
-2. **Parsing:** taking a stream (array) of tokens and turning it into a tree of nested elements, which collectively represent the grammatical structure of the program. This tree is called an "AST" (<b>A</b>bstract <b>S</b>yntax <b>T</b>ree).
+2. **Parsing:** Token'ların dizisini (array) alıp, programın gramer yapısını oluşturan, dallara ayrılmış ağaç yapısına dönüştürme işlemine denir. Bu ağaç yapısına "AST" (<b>A</b>bstract <b>S</b>yntax <b>T</b>ree - Soyut Söz Dizimi Ağacı) denir.
 
-    The tree for `var a = 2;` might start with a top-level node called `VariableDeclaration`, with a child node called `Identifier` (whose value is `a`), and another child called `AssignmentExpression` which itself has a child called `NumericLiteral` (whose value is `2`).
+    `var a = 2;` söz dizimi için ağaç yapısı şu şekilde oluşmaktadır: En üst seviye boğum (node) `VariableDeclaration` olarak adlandırılır. Bu boğumun alt dallarından biri `Identifier` (değeri `a`'dır) olarak adlandırılır. Diğer bir alt dal `AssignmentExpression` olarak adlandırılır. Bu son alt dalın bir tane de kendi alt dalı vardır; o da `NumericLiteral` olarak adlandırılır (değeri `2`'dir).
 
-3. **Code-Generation:** the process of taking an AST and turning it into executable code. This part varies greatly depending on the language, the platform it's targeting, etc.
+3. **Code-Generation:** AST denilen ağaç yapısının çalıştırılabilir koda dönüştürülmesi işlemidir. Bu işlemler programlama diline, hedeflenen platforma, vb. durumlara göre farklılık gösterebilir.
 
-    So, rather than get mired in details, we'll just handwave and say that there's a way to take our above described AST for `var a = 2;` and turn it into a set of machine instructions to actually *create* a variable called `a` (including reserving memory, etc.), and then store a value into `a`.
+    Ayrıntılarda boğulmadan bu işlemi şu şekilde özetleyebiliriz: `var a = 2;` söz dizimi için yukarıda tanımladığımız AST ağaç yapısı alınıp, makine diline çevirilir. `a` isminde bir değişken *yaratılır* (bellekte alan rezerve etme, vb. işlemler). Ve bu değişkenin içerisinde `2` değeri saklanır.
 
-    **Note:** The details of how the engine manages system resources are deeper than we will dig, so we'll just take it for granted that the engine is able to create and store variables as needed.
+    **Not:** JavaScript motorunun sistem kaynaklarını nasıl yönettiği konumuzun sınırlarını aşıyor. Bu yüzden sadece JavaScript motorunun ihtiyaç halinde bellekte yer açıp bir değişken oluşturabileceğini ve saklayabileceğini bilmemiz yeterlidir.
 
 The JavaScript engine is vastly more complex than *just* those three steps, as are most other language compilers. For instance, in the process of parsing and code-generation, there are certainly steps to optimize the performance of the execution, including collapsing redundant elements, etc.
 
