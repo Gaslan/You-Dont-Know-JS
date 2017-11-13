@@ -43,53 +43,51 @@ JavaScript derleme işlemi çoğu durumda kod çalışmadan bir kaç mikro saniy
 
 Basitçe yinelemek gerekirse, JavaScript'te her kod parçası çalışmadan önce (genelllikle hemen önce) derlenmesi gerekir. Yani JavaScript derleyici `var a = 2;` kodunu alır, ilk önce derleme işlemini yapar ve hemen sonrasında da kodu çalıştırır.
 
-## Understanding Scope
+## Scope'u anlamak
 
-The way we will approach learning about scope is to think of the process in terms of a conversation. But, *who* is having the conversation?
+Scope yapısını, karşılıklı konuşma şeklinde düşünüp açıklamaya çalışacağız. Peki bu karşılıklı konuşmada kimler olacak?
 
-### The Cast
+### Oyuncular
 
-Let's meet the cast of characters that interact to process the program `var a = 2;`, so we understand their conversations that we'll listen in on shortly:
+Gelin isterseniz biraz sonra dinleyeceğimiz karşılıklı kouşmanın karakterlerini yakından tanıyalım. Böylece dinleyeceğimiz konuşmalar bize daha anlamlı gelecektir.
 
-1. *Engine*: responsible for start-to-finish compilation and execution of our JavaScript program.
+1. *JS Motoru*: Programın baştan sona derleme ve çalıştırılma işlemlerinden sorumludur.
 
-2. *Compiler*: one of *Engine*'s friends; handles all the dirty work of parsing and code-generation (see previous section).
+2. *Derleyici*: JS Motorunun arkadaşlarından biridir. Onun yerine, parsing ve code-generation gibi pis ileri yapar. (önceki bölüme bakınız).
 
-3. *Scope*: another friend of *Engine*; collects and maintains a look-up list of all the declared identifiers (variables), and enforces a strict set of rules as to how these are accessible to currently executing code.
+3. *Scope*: JS Motorunun diğer bir arkadaşıdır. Bütün tanımlayıcıların (değişkenlerin) arama listesini toplar ve bünyesinde barındırır, bu tanımlayıcılara çalıştırılacak kod tarafından, nasıl ulaşılabileceğinin kurallarını belirler ve uygular.
 
-For you to *fully understand* how JavaScript works, you need to begin to *think* like *Engine* (and friends) think, ask the questions they ask, and answer those questions the same.
+JavaScript'in nasıl çalıştığını tam anlamıyla anlayabilmek için, JS Motoru (ve arkadaşları) gibi düşünmeye başlayıp, onların sorduğu soruları sorup onlar gibi cevaplamaya çalışın.
 
 ### Back & Forth
 
-When you see the program `var a = 2;`, you most likely think of that as one statement. But that's not how our new friend *Engine* sees it. In fact, *Engine* sees two distinct statements, one which *Compiler* will handle during compilation, and one which *Engine* will handle during execution.
+`var a = 2;` kodunu gördüğünüzde kafanızda sadece bir ifade canlanıyor olmalı. Ancak, *JS Motoru* için işler hiçde öyle değil. *JS Motoru* iki farklı ifade görür, biri derleyicinin derleme esnasında ilgilendiği, bir diğeri de *JS Motoru*'nun yürütme sırasında ilgilendiğidir.
 
-So, let's break down how *Engine* and friends will approach the program `var a = 2;`.
+Şimdi isterseniz *JS Motoru*'nun ve arkadaşlarının `var a = 2;` programına nasıl yaklaşacaklarını izleyelim.
 
-The first thing *Compiler* will do with this program is perform lexing to break it down into tokens, which it will then parse into a tree. But when *Compiler* gets to code-generation, it will treat this program somewhat differently than perhaps assumed.
+*Derleyici*'nin yapacağı ilk şey, kodu tokenlara parçalamak ve bir ağaç yapısı oluşturmak olacaktır. *Derleyici* kod oluşturma aşamasına geldiğinde, programa beklenilenden farklı davranır.
 
-A reasonable assumption would be that *Compiler* will produce code that could be summed up by this pseudo-code: "Allocate memory for a variable, label it `a`, then stick the value `2` into that variable." Unfortunately, that's not quite accurate.
+Makul bir varsayımla *Derleyici*'nin şu şekilde davranacağı düşünülebilir: "Bellekte bir değişken için yer açar ve buna `a` ismini verir ve daha sonra bu değişkene `2` değerini veirir." Malesef bu varsayım çokta doğru değildir.
 
-*Compiler* will instead proceed as:
+Bu aşamada *Derleyici* şu şekilde çalışır:
 
-1. Encountering `var a`, *Compiler* asks *Scope* to see if a variable `a` already exists for that particular scope collection. If so, *Compiler* ignores this declaration and moves on. Otherwise, *Compiler* asks *Scope* to declare a new variable called `a` for that scope collection.
+1. `var a` ifadesiyle karşılaşan *Derleyici*, *Scope*'a mevcut scope listesi içerisinde `a` isimli bir değişkenin olup olmadığını sorar. Eğer varsa *Derleyici* bu tanımlamayı yok sayar ve yoluna devam eder. Eğer yoksa *Derleyici*, *Scope*'a mevcut scope listesi içerisinde `a` isimli bir değişken tanımlamasını söyler.
 
-2. *Compiler* then produces code for *Engine* to later execute, to handle the `a = 2` assignment. The code *Engine* runs will first ask *Scope* if there is a variable called `a` accessible in the current scope collection. If so, *Engine* uses that variable. If not, *Engine* looks *elsewhere* (see nested *Scope* section below).
+2. Derleyici, daha sonra, `a = 2` atamasını işleyecek şekilde, *JS Motoru* için kod üretir. Bu aşamadan sonra *JS Motoru*'nun çalıştıracağı kod, ilk olarak *Scope*'a mevcut scope listesi içerisinde `a` isimli bir değişken erişilebilir halde bulunuyormu diye sorar. Eğer bulunuyorsa *JS Motoru* bu değişkeni kullanır, bulunmuyorsa başka bir yere (aşağıdaki *Nested Scope* bölümüne bakınız) bakar.
 
-If *Engine* eventually finds a variable, it assigns the value `2` to it. If not, *Engine* will raise its hand and yell out an error!
+Eğer *JS Motoru* eninde sonunda bir `a` değişkeni bulursa ona `2` değerini atar, bulamazsa elini kaldırır ve bir hata var diye bağırır (hata fırlatır).
 
-To summarize: two distinct actions are taken for a variable assignment: First, *Compiler* declares a variable (if not previously declared in the current scope), and second, when executing, *Engine* looks up the variable in *Scope* and assigns to it, if found.
+Özetlemek için: Değişken tanımlaması için iki farklı eylem otaya konur: Birincisi, *Derleyici* bir değişken tanımlar (eğer mevcut scope içerisinde daha önce tanımlanmamışsa), ikincisi, çalışma anında, *JS Motoru* mevcut scope'da değişkeni arar ve bulursa değerini atar.
 
-### Compiler Speak
+### Derleyicinin Konuşması
 
-We need a little bit more compiler terminology to proceed further with understanding.
+Durumu daha iyi anlayabilmek için derleyicinin terminolojisini biraz daha iyi kavramamıza ihtiyaç var.
 
-When *Engine* executes the code that *Compiler* produced for step (2), it has to look-up the variable `a` to see if it has been declared, and this look-up is consulting *Scope*. But the type of look-up *Engine* performs affects the outcome of the look-up.
+*JS Motoru*, *Derleyici*'nin adım (2) de ürettiği kodu çalıştırırken, *Scope*'a danışarak `a` değişkeninin tanımlı olup olmadığına araştırması lazım. Ancak *JS Motoru*'nun yaptığı bu araştırmanın türü araştırmanın sonucunu etkileyecektir.
 
-In our case, it is said that *Engine* would be performing an "LHS" look-up for the variable `a`. The other type of look-up is called "RHS".
+Mevcut durumda, *JS Motoru*'nun, `a` değişkeni için "LHS" türünde bir arama yaptığı söylenebilir. Diğer arama türünede RHS diyeceğiz.
 
-I bet you can guess what the "L" and "R" mean. These terms stand for "Left-hand Side" and "Right-hand Side".
-
-Side... of what? **Of an assignment operation.**
+Burada LHS'nin "Left Hand Side - Sol Taraf" ve RHS'nin de "Right-hand Side - Sağ Taraf" anlamına geldiğini tahmin etmişsinizdir.
 
 In other words, an LHS look-up is done when a variable appears on the left-hand side of an assignment operation, and an RHS look-up is done when a variable appears on the right-hand side of an assignment operation.
 
